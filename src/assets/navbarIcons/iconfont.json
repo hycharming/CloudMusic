@@ -1,0 +1,58 @@
+{
+  "id": "2750272",
+  "name": "CloudMusic",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "21024482",
+      "name": "网易云音乐",
+      "font_class": "wangyiyunyinle",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "1256462",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "1464044",
+      "name": "麦克风",
+      "font_class": "maikefeng-xue",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "2116652",
+      "name": "MINIMIZE",
+      "font_class": "MINIMIZE",
+      "unicode": "e6b7",
+      "unicode_decimal": 59063
+    },
+    {
+      "icon_id": "5924500",
+      "name": "衣服",
+      "font_class": "yifu",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "11753357",
+      "name": "信封",
+      "font_class": "V",
+      "unicode": "e6d1",
+      "unicode_decimal": 59089
+    },
+    {
+      "icon_id": "18309270",
+      "name": "设 置",
+      "font_class": "shezhi",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    }
+  ]
+}

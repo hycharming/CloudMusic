@@ -1,0 +1,51 @@
+{
+  "id": "2750956",
+  "name": "sidebar",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1473537",
+      "name": "音乐",
+      "font_class": "yinyue",
+      "unicode": "e680",
+      "unicode_decimal": 59008
+    },
+    {
+      "icon_id": "5643536",
+      "name": "下载",
+      "font_class": "xiazai",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "6995615",
+      "name": "最近播放",
+      "font_class": "zuijinbofang",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "8685512",
+      "name": "娱乐_音乐电台",
+      "font_class": "yule_yinlediantai",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "9590443",
+      "name": "我的收藏",
+      "font_class": "wodeshoucang",
+      "unicode": "e691",
+      "unicode_decimal": 59025
+    },
+    {
+      "icon_id": "9663834",
+      "name": "云",
+      "font_class": "yun",
+      "unicode": "e785",
+      "unicode_decimal": 59269
+    }
+  ]
+}
