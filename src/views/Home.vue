@@ -7,7 +7,7 @@
     <!-- 页面主体区域 -->
     <el-container class="content_container">
       <!-- 侧边栏 -->
-      <el-aside style="width: 250px">
+      <el-aside style="width: 200px">
         <side-bar></side-bar>
       </el-aside>
       <!-- 右侧内容区域 -->
@@ -41,15 +41,37 @@ export default {
   background-color: #f7f7f7;
   .el-header {
     padding: 0;
+    position: absolute;
+    width: 100%;
+    top: 0;
   }
-  .el-aside {
-    border-right: 1px solid#E1E1E1;
-    overflow: visible;
+  .content_container {
+    position: absolute;
+    top: 60px;
+    bottom: 72px;
+    width: 100%;
+    .el-aside {
+      border-right: 1px solid#E1E1E1;
+      overflow: visible;
+    }
+    .el-main {
+      background-color: #fff;
+      padding: 5px 15px;
+      overflow: scroll;
+
+      // height:calc( 100% - 72px );
+    }
+    .el-main::-webkit-scrollbar {
+      display: none;
+    }
   }
   .el-footer {
     border-top: 1px solid#E1E1E1;
     height: 72px !important;
-    padding:0;
+    width: 100%;
+    padding: 0;
+    position: absolute;
+    bottom: 0;
   }
 }
 </style>

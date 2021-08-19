@@ -1,0 +1,81 @@
+<template>
+  <div class="command">
+    <div class="carousel">
+      <el-carousel :interval="4000" type="card" height="200px">
+        <el-carousel-item v-for="item in 10" :key="item" @click.native ="getItem(item-1)">
+          <el-image
+            style="height: 200px; width: 100%"
+            :src="Object.keys(carouselList).length !== 0?carouselList[item - 1].imageUrl:''"
+            :fit="'cover'"
+          ></el-image>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
+    <div class="commandsongs">
+      <Part :contentLength="10" :title="'推荐歌单'" :dataList="dataList"></Part>
+    </div>
+  </div>
+</template>
+
+<script>
+import Part from "../../../components/part.vue";
+import commandAPI from "../../../service/api";
+export default {
+  data() {
+    return {
+      dataList: [],
+      carouselList: [],
+    };
+  },
+  components: {
+    Part,
+  },
+  created() {
+    // 轮播图
+    commandAPI
+      .bannerRequest()
+      .then((res) => {
+        console.log("res:", res.banners);
+        this.carouselList = res.banners;
+      });
+    // 推荐歌单请求
+    commandAPI.songsListRequest().then((res) => {
+      console.log(res.result)
+      this.dataList = res.result;
+    });
+  },
+  methods:{
+    getItem(item){
+      console.log(item);
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.command {
+  height: 100%;
+  .el-carousel {
+    width: 100%;
+    margin: 0 auto;
+    z-index: 0;
+    .el-carousel__item h3 {
+      color: #475669;
+      font-size: 14px;
+      opacity: 0.75;
+      line-height: 200px;
+      margin: 0;
+    }
+
+    .el-carousel__item:nth-child(2n) {
+      background-color: #99a9bf;
+    }
+
+    .el-carousel__item:nth-child(2n + 1) {
+      background-color: #d3dce6;
+    }
+  }
+  .commandsongs {
+  }
+}
+</style>

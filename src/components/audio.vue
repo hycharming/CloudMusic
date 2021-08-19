@@ -15,7 +15,7 @@
       <div class="options">
         <i class="el-icon-delete"></i>
         <i class="iconfont icon-shangyishoushangyige"></i>
-        <el-button circle icon="el-icon-caret-right"></el-button>
+        <i :class="isPause?'el-icon-video-play':'el-icon-video-pause'" @click="isPause =!isPause"></i>
         <i class="iconfont icon-xiayigexiayishou"></i>
         <span>词</span>
       </div>
@@ -48,10 +48,20 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data(){
+    return {
+      isPause:true
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
+@mixin playOrPauseIcon{
+  font-size: 32px;
+  color:rgb(73, 73, 73)
+}
 @mixin flex($justifyContent: flex-start) {
   display: flex;
   align-items: center;
@@ -85,15 +95,22 @@ export default {};
       @include flex(space-around);
       i:hover {
         font-weight: bold;
+        cursor: pointer;
       }
       .icon-shangyishoushangyige {
         color: #d7d7d7;
       }
-      .el-button {
-        background-color: #f4f4f4;
-        padding: 3px;
-        font-size: 25px;
-        color: #000;
+      .el-icon-video-play{
+        @include playOrPauseIcon;
+      }
+      .el-icon-video-play:hover{
+          font-weight:normal;
+      }
+      .el-icon-video-pause{
+        @include playOrPauseIcon;
+      }
+      .el-icon-video-pause:hover{
+          font-weight:normal;
       }
     }
     .progress {

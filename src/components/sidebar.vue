@@ -23,12 +23,14 @@ export default {
 
             msgList:['发现音乐','视频','朋友','直播','私人FM'],
             myMusicList:['本地音乐','下载管理','最近播放','我的音乐云盘','我的电台','我的收藏'],
-            iconList:['yinyue','xiazai','zuijinbofang','yun','yule_yinlediantai','wodeshoucang']
+            iconList:['yinyue','xiazai','zuijinbofang','yun','yule_yinlediantai','wodeshoucang'],
+            routerPath:['/findMusic','/video','/friend','/live','/privateFM']
         }
     },
     methods:{
         getIndex(idx){
             this.clickIndex = idx;
+            this.$router.push(this.routerPath[idx])
         }
     }
 }
@@ -59,6 +61,7 @@ export default {
             .isActive{
                 background-color: #F6F6F7;
                 font-weight: bolder;
+                font-size: 16px;
             }
             .isMyMusicActive{
                 background-color: #F6F6F7;
