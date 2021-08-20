@@ -5,19 +5,20 @@
       <i class="el-icon-arrow-right"></i>
     </div>
     <div class="content">
-      <div class="contentPart" v-for="index in contentLength" :key="index">
+      <div class="contentPart" v-for="index in contentLength" :key="index" style="width:200px" @click="pathToDetail(index)">
         <el-image
           style="width: 200px; height: 200px"
           :src="Object.keys(dataList).length !== 0?dataList[index-1].picUrl:''"
           fit="cover"
         ></el-image>
-        <div class="describe">{{Object.keys(dataList).length !== 0?dataList[index-1].name:0}}</div>
+        <div class="describe">{{Object.keys(dataList).length !== 0?dataList[index-1].name:''}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import dataAPI from '../service/api'
 export default {
   props: {
     title: {
@@ -35,6 +36,16 @@ export default {
   },
   mounted(){
     //   console.log('this.dataList:',this.dataList)
+  },
+  methods:{
+    pathToDetail(index){
+      // console.log(index);
+      dataAPI.songsListDetailRequest({
+        id:this.dataList[index-1].id
+      }).then(res=>{
+        this.$router.push({path:'/songsListDetail',query:res.playlist})
+      })
+    }
   }
 };
 </script>
@@ -42,7 +53,7 @@ export default {
 <style lang="scss" scoped>
 @mixin flex {
   display: flex;
-  align-items: center;
+  align-items:flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
 }

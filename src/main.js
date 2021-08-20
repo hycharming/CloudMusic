@@ -25,7 +25,10 @@ import {
   Avatar,
   Dialog,
   Checkbox,
-  Divider
+  Divider,
+  Tag,
+  Table,
+  TableColumn
 } from 'element-ui'
 
 Vue.use(Container),
@@ -45,7 +48,10 @@ Vue.use(Image),
 Vue.use(Avatar),
 Vue.use(Dialog),
 Vue.use(Checkbox),
-Vue.use(Divider)
+Vue.use(Divider),
+Vue.use(Tag),
+Vue.use(Table),
+Vue.use(TableColumn)
 
 Vue.config.productionTip = false
 

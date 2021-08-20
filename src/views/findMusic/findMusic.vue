@@ -6,21 +6,23 @@
           class="el-menu-demo"
           mode="horizontal"
           router
-          :default-active="'/command'"
+          :default-active="'/findMusic/command'"
         >
           <!--  :default-active="activeIndex"
         @select="handleSelect" -->
           <el-menu-item
             v-for="(item, idx) in MenuList"
             :key="idx"
-            :index="routerPath[idx]"
+            :index="'/findMusic' + routerPath[idx]"
           >
             {{ item }}</el-menu-item
           >
         </el-menu>
       </div>
       <div class="content">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </div>
     </div>
     <el-card v-if="isLogin">
@@ -77,6 +79,7 @@
 </template>
 
 <script>
+import loginAPI from "../../service/login";
 export default {
   data() {
     return {
@@ -114,11 +117,12 @@ export default {
     });
   },
   methods: {
-    Logout(){
+    Logout() {
+      loginAPI.logoutRequest();
       sessionStorage.clear();
       this.isLogin = false;
-      this.$EventBus.$emit("isLogout",true)
-    }
+      this.$EventBus.$emit("isLogout", true);
+    },
   },
 };
 </script>
@@ -126,6 +130,7 @@ export default {
 <style lang="scss" scoped>
 .top {
   height: 100%;
+  padding:5px 15px;
   .findMusic {
     height: 100%;
     .el-menu {

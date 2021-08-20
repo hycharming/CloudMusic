@@ -20,6 +20,7 @@
           class="tgsq"
           icon="iconfont icon-maikefeng-xue"
           circle
+          @click="test()"
         ></el-button>
       </div>
     </div>
@@ -27,11 +28,15 @@
       <div class="avatar">
         <el-avatar
           size="small"
-          :src="userInfo.avatarUrl?userInfo.avatarUrl:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+          :src="
+            userInfo.avatarUrl
+              ? userInfo.avatarUrl
+              : 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+          "
         ></el-avatar>
       </div>
       <div class="loginMsg" @click="OpenLoginDialog()">
-        <span>{{userInfo.nickname?userInfo.nickname:"未登录"}}</span>
+        <span>{{ userInfo.nickname ? userInfo.nickname : "未登录" }}</span>
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-badge is-dot>
@@ -70,12 +75,12 @@
         <el-button class="regist" type="text">注册</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
-import loginAPI from '../service/login'
+import loginAPI from "../service/login";
+// import UserAPI from "../service/user";
 export default {
   // loginAPI.loginRequest({
   //       phone:13678288789,
@@ -84,48 +89,54 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      isLogin:false,
+      isLogin: false,
       // isLogout:false,
       username: "13678288789",
       password: "hyc200113",
-      userInfo:{}
+      userInfo: {},
     };
   },
-  created(){
-    if(sessionStorage.getItem('userInfo')){
-      this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+  created() {
+    if (sessionStorage.getItem("userInfo")) {
+      this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
     }
   },
-  mounted(){
-    this.$EventBus.$on("isLogout",msg =>{
-      if(msg){
+  mounted() {
+    this.$EventBus.$on("isLogout", (msg) => {
+      if (msg) {
         this.userInfo = {};
       }
-    })
+    });
   },
   methods: {
     OpenLoginDialog() {
-      if (this.dialogVisible != true && !sessionStorage.getItem('token')) {
+      if (this.dialogVisible != true && !sessionStorage.getItem("token")) {
         this.dialogVisible = true;
-      }else{
+      } else {
         this.isLogin = true;
-        this.$EventBus.$emit("isLogin",this.isLogin);
+        this.$EventBus.$emit("isLogin", this.isLogin);
       }
     },
-    // test(){
-    //   console.log("1111");
-    // },
+    // 登录请求
     loginRequest() {
-      loginAPI.loginRequest({
-        phone: this.username,
-        password: this.password,
-      }).then(res=>{
-        console.log(res);
-        sessionStorage.setItem('token',res.token);
-        this.userInfo = res.profile;
-        sessionStorage.setItem('userInfo', JSON.stringify(this.userInfo))
-      });
-      this.dialogVisible = false
+      loginAPI
+        .loginRequest({
+          phone: this.username,
+          password: this.password,
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res);
+          document.cookie = res.cookie;
+          // console.log(encodeURIComponent(res.cookie));
+          sessionStorage.setItem("token", res.token);
+          this.userInfo = res.profile;
+          sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
+        });
+      this.dialogVisible = false;
+      setTimeout(() => {
+        this.$EventBus.$emit("login", true);
+      },500);
     },
   },
 };

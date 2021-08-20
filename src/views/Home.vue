@@ -12,6 +12,7 @@
       </el-aside>
       <!-- 右侧内容区域 -->
       <el-main>
+        <playingSongsList></playingSongsList>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -25,13 +26,20 @@
 import NavBar from "../components/navbar";
 import SideBar from "../components/sidebar.vue";
 import Audio from "../components/audio.vue";
+import playingSongsList from './playingSongsList.vue'
 export default {
   name: "Home",
   components: {
     NavBar,
     SideBar,
     Audio,
+    playingSongsList
   },
+  created(){
+    if(this.$router.path !== '/findMusic/command'){
+            this.$router.push('/findMusic/command')
+        }
+  }
 };
 </script>
 
@@ -52,11 +60,15 @@ export default {
     width: 100%;
     .el-aside {
       border-right: 1px solid#E1E1E1;
-      overflow: visible;
+      overflow: scroll;
+      background-color: #fff;
+    }
+    .el-aside::-webkit-scrollbar {
+      display: none;
     }
     .el-main {
       background-color: #fff;
-      padding: 5px 15px;
+      padding:0;
       overflow: scroll;
 
       // height:calc( 100% - 72px );
