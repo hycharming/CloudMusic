@@ -17,10 +17,10 @@ import collector from '../views/songsListDetail/children/collector.vue'
 Vue.use(VueRouter)
 
 // 解决被重复点击的问题
-const VueRouterPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(to) {
-  return VueRouterPush.call(this, to).catch(err => err)
-}
+// const VueRouterPush = VueRouter.prototype.push
+// VueRouter.prototype.push = function push(to) {
+//   return VueRouterPush.call(this, to).catch(err => err)
+// }
 
 const routes = [{
   path: '/',

@@ -28,7 +28,11 @@
         }}</span>
       </div>
       <div class="btngroups">
-        <el-button size="medium" round style="background: #ec4141; color: white"
+        <el-button
+          size="medium"
+          round
+          style="background: #ec4141; color: white"
+          @click="playingAllSongs()"
           ><i class="el-icon-caret-right"></i> 播放全部
           <i class="el-icon-plus"></i>
         </el-button>
@@ -96,6 +100,8 @@
         suffix-icon="iconfont icon-sousuo"
         size="mini"
         placeholder="搜索歌单音乐"
+        v-model="filterData"
+        @input="debounce"
       ></el-input>
     </div>
     <div class="content">
@@ -115,6 +121,8 @@ export default {
       dataList: {
         creator: {},
       },
+      timer:0, //防抖时间
+      filterData: "",
       MenuList: ["歌曲列表", "评论", "收藏者"],
       routerPath: ["/songsList", "/comment", "/collector"],
       isDisplay: false,
@@ -133,6 +141,7 @@ export default {
     //     // console.log("object",this.$refs.dataList );
     //   });
   },
+
   methods: {
     DisplayOrClose() {
       this.isDisplay = !this.isDisplay;
@@ -141,6 +150,29 @@ export default {
       } else {
         document.getElementById("ellipsis").style = "white-space :nowrap ";
       }
+    },
+    // 播放全部
+    playingAllSongs() {
+      this.$EventBus.$emit("PlayingAllSongs", true);
+    },
+    // 搜索框过滤歌名
+    filterSongsName() {
+      this.$EventBus.$emit("filterData", this.filterData);
+    },
+    // 防抖
+    debounce() {
+      if (this.timer === 0) {
+        this.filterSongsName();
+      } else {
+        // alert("操作过快");
+        clearTimeout(this.timer);
+        // console.log()
+      }
+
+      this.timer = setTimeout(() => {
+        this.filterSongsName();
+        this.timer = 0;
+      }, 500);
     },
   },
 };

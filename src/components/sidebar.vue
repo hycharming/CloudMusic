@@ -104,7 +104,7 @@ export default {
   methods: {
     getIndex(idx) {
       this.clickIndex = idx;
-      this.$router.push(this.routerPath[idx]);
+      this.$router.push({path:this.routerPath[idx],query:{time:Date.now()}});
     },
     UserRequest() {
       console.log(JSON.parse(sessionStorage.getItem('userInfo')).userId);

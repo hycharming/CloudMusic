@@ -5,7 +5,7 @@
         <h2>当前播放</h2>
       </div>
       <div class="options">
-        <span>总35首</span>
+        <span>{{'共'+tableData.length+'首'}}</span>
         <div class="btn">
           <el-button type="text" style="color: black"
             ><i class="el-icon-folder-add"></i> 收藏全部</el-button
@@ -20,10 +20,19 @@
           style="width: 100%"
           :data="tableData"
           :row-style="{ height: '10px' }"
+          :row-class-name="tableRowClassName"
+          @row-dblclick="playSongs"
         >
           <el-table-column
+            width="25"
+            show-overflow-tooltip
+          ><template slot-scope="scope">
+            <i class="el-icon-service" v-show="scope.row.id == playingId"></i>
+          </template>
+          </el-table-column>
+          <el-table-column
             prop="name"
-            width="150"
+            width="125"
             show-overflow-tooltip
           ></el-table-column>
           <el-table-column
@@ -57,13 +66,22 @@
 export default {
   data() {
     return {
+      playingId: -1, //正在播放
       tableData: [],
       isRepeat: false,
-      isPlayingListOpen:false
+      isPlayingListOpen: false,
     };
   },
   mounted() {
-    this.$EventBus.$on("playList", (res) => {
+    // 播放全部
+    this.$EventBus.$on("AllSongs", (res) => {
+      this.tableData = res;
+      this.$EventBus.$emit("playingSongs", this.tableData[0]);
+      this.playingId = this.tableData[0].id;
+    });
+    // 更新播放列表
+    this.$EventBus.$on("Detail", (res) => {
+      console.log("34",res);
       this.isRepeat = false;
       for (var i = 0; i < this.tableData.length; i++) {
         if (this.tableData[i].Url == res.Url) {
@@ -74,10 +92,27 @@ export default {
       if (!this.isRepeat) {
         this.tableData.push(res);
       }
+      // 播放歌曲
+      this.$EventBus.$emit("playingSongs", res);
+      this.playingId = res.id;
     });
-    this.$EventBus.$on("isOpenPlayingList",res=>{
-        this.isPlayingListOpen = res;
-    })
+    // 是否打开播放列表
+    this.$EventBus.$on("isOpenPlayingList", (res) => {
+      this.isPlayingListOpen = res;
+    });
+  },
+  methods: {
+    tableRowClassName({ row }) {
+      if (row.id == this.playingId) {
+        return "isPlaying";
+      }
+      return "";
+    },
+    playSongs(res){
+      console.log("res12",res);
+      this.$EventBus.$emit("findSongsUrl", res);
+      this.playingId = res.id;
+    }
   },
 };
 </script>
@@ -87,13 +122,13 @@ export default {
   height: 100%;
   position: absolute;
   right: 0;
-  z-index: 1;
+  z-index: 2;
   .el-card {
     height: 100%;
     width: 400px;
-    box-shadow: none;
-    border: none;
-    border-radius: 0;
+      // border: none;
+      // border-radius: 0;
+    overflow: scroll;
     .title {
       h2 {
         margin-bottom: 0;
@@ -123,6 +158,12 @@ export default {
       }
     }
   }
+  .el-card::-webkit-scrollbar {
+    display: none;
+  }
+}
+::v-deep .isPlaying {
+  color: red;
 }
 ::v-deep .el-table td,
 .el-table th {

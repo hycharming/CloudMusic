@@ -103,6 +103,7 @@ export default {
   },
   mounted() {
     this.$EventBus.$on("isLogout", (msg) => {
+       this.$EventBus.$emit("isLogin", false);
       if (msg) {
         this.userInfo = {};
       }
@@ -113,8 +114,8 @@ export default {
       if (this.dialogVisible != true && !sessionStorage.getItem("token")) {
         this.dialogVisible = true;
       } else {
-        this.isLogin = true;
-        this.$EventBus.$emit("isLogin", this.isLogin);
+          this.isLogin = !this.isLogin;
+          this.$EventBus.$emit("isLogin", this.isLogin);
       }
     },
     // 登录请求
@@ -146,6 +147,7 @@ export default {
 $btnAndInputBGC: #e13e3e;
 $BTNfontColor: #e26a6a;
 $fontColor: #fbd9d9;
+$BackGroundColor: #ec4141;
 @mixin flexAlignItemsCenter($JustifyContent: flex-start) {
   display: flex;
   align-items: center;
@@ -153,7 +155,7 @@ $fontColor: #fbd9d9;
 }
 
 .navbar {
-  background-color: #ec4141;
+  background-color: $BackGroundColor;
   height: 100%;
   padding: 0 10px;
   @include flexAlignItemsCenter(space-between);
@@ -218,7 +220,7 @@ $fontColor: #fbd9d9;
       font-size: 50px;
       position: absolute;
       left: calc(50% - 25px);
-      color: #ec4141;
+      color: $BackGroundColor;
     }
     .content {
       margin-top: 80px;
@@ -234,7 +236,7 @@ $fontColor: #fbd9d9;
         }
       }
       .login {
-        background-color: #ec4141;
+        background-color: $BackGroundColor;
         color: #fff;
         width: 100%;
       }
@@ -266,8 +268,8 @@ $fontColor: #fbd9d9;
 }
 ::v-deep .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background-color: #ec4141;
-  border-color: #ec4141;
+  background-color: $BackGroundColor;
+  border-color: $BackGroundColor;
   // color:red;
 }
 

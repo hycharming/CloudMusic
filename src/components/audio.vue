@@ -80,12 +80,13 @@
         status="exception"
         style="width: 30%"
       ></el-progress>
-      <i class="el-icon-s-fold" @click="OpenplayingList()"></i>
+      <i class="el-icon-s-fold" @click="OpenplayingList()" style="cursor:pointer"></i>
     </div>
   </div>
 </template>
 
 <script>
+// import songsAPI from '../service/api'
 export default {
   data() {
     return {
@@ -110,6 +111,7 @@ export default {
       this.percentage = ((this.minute * 60 + this.timer) * 100) / this.time;
       // 播放完毕
       if (this.percentage >= 100) {
+        this.nextSongs();
         clearInterval(this.interval);
         this.isPlay = false;
       }
@@ -121,13 +123,14 @@ export default {
     },
   },
   mounted() {
-    this.$EventBus.$on("Detail", (res) => {
+    this.$EventBus.$on("playingSongs", (res) => {
       this.timer = 0;
+      this.minute = 0;
       clearInterval(this.interval);
-      console.log("res", res);
+      // console.log("res", res);
       this.songsDetail = res;
-      // 将歌曲添加至播放列表
-      this.$EventBus.$emit("playList", this.songsDetail);
+      // // 将歌曲添加至播放列表
+      // this.$EventBus.$emit("playList", this.songsDetail);
       if (this.songsDetail.index === 0) {
         this.isFirst = true;
       } else {
@@ -137,7 +140,7 @@ export default {
       this.time = parseInt(this.songsDetail.dt / 1000);
       // console.log(this.time);
       let min = parseInt(this.time / 60);
-      let sec = this.time % 60;
+      let sec = this.time % 60 >=10? this.time%60:'0'+this.time%60;
       // console.log(time,min,this.songsDetail.dt,sec);
       this.songsLength = `${min}:${sec}`;
     });

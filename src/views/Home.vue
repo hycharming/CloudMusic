@@ -12,7 +12,10 @@
       </el-aside>
       <!-- 右侧内容区域 -->
       <el-main>
-        <playingSongsList></playingSongsList>
+        <LoginMessage></LoginMessage>
+        <keep-alive>
+          <playingSongsList></playingSongsList>
+        </keep-alive>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -26,20 +29,25 @@
 import NavBar from "../components/navbar";
 import SideBar from "../components/sidebar.vue";
 import Audio from "../components/audio.vue";
-import playingSongsList from './playingSongsList.vue'
+import playingSongsList from "./playingSongsList.vue";
+import LoginMessage from "./LoginMessage.vue";
 export default {
   name: "Home",
   components: {
     NavBar,
     SideBar,
     Audio,
-    playingSongsList
+    playingSongsList,
+    LoginMessage,
   },
-  created(){
-    if(this.$router.path !== '/findMusic/command'){
-            this.$router.push('/findMusic/command')
-        }
-  }
+  created() {
+    if (this.$router.path !== "/findMusic/command") {
+      this.$router.push({
+        path: "/findMusic/command",
+        query: { time: Date.now() },
+      });
+    }
+  },
 };
 </script>
 
@@ -68,7 +76,7 @@ export default {
     }
     .el-main {
       background-color: #fff;
-      padding:0;
+      padding: 0;
       overflow: scroll;
 
       // height:calc( 100% - 72px );

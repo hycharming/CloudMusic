@@ -3,14 +3,14 @@
     <div class="carousel">
       <el-carousel :interval="4000" type="card" height="200px" trigger="click">
         <el-carousel-item
-          v-for="item in 10"
+          v-for="item in 9"
           :key="item"
           @click.native="getItem(item - 1)"
         >
           <el-image
             style="height: 200px; width: 100%"
             :src="
-              Object.keys(carouselList).length !== 0
+              carouselList.length != 0
                 ? carouselList[item - 1].imageUrl
                 : ''
             "
@@ -42,7 +42,8 @@ export default {
   created() {
     // 轮播图
     commandAPI.bannerRequest().then((res) => {
-      // console.log("res:", res.banners);
+      console.log(this.carouselList);
+      console.log("res:", res.banners);
       this.carouselList = res.banners;
     });
     // 推荐歌单请求
