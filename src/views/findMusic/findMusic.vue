@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import loginAPI from "../../service/login";
 export default {
   data() {
     return {
@@ -48,11 +47,7 @@ export default {
 
   },
   methods: {
-    Logout() {
-      loginAPI.logoutRequest();
-      sessionStorage.clear();
-      this.$EventBus.$emit("isLogout", true);
-    },
+
   },
 };
 </script>

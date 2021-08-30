@@ -10,9 +10,7 @@
           <el-image
             style="height: 200px; width: 100%"
             :src="
-              carouselList.length != 0
-                ? carouselList[item - 1].imageUrl
-                : ''
+              carouselList.length != 0 ? carouselList[item - 1].imageUrl : ''
             "
             :fit="'cover'"
           ></el-image>
@@ -20,7 +18,13 @@
       </el-carousel>
     </div>
     <div class="commandsongs">
-      <Part :contentLength="10" :title="'推荐歌单'" :dataList="dataList"></Part>
+      <keep-alive>
+        <Part
+          :contentLength="10"
+          :title="'推荐歌单'"
+          :dataList="dataList"
+        ></Part>
+      </keep-alive>
     </div>
   </div>
 </template>
@@ -28,6 +32,7 @@
 <script>
 import Part from "../../../components/part.vue";
 import commandAPI from "../../../service/api";
+import { mapMutations, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -52,8 +57,11 @@ export default {
       this.dataList = res.result;
     });
   },
+  computed: {
+    ...mapGetters(["getState"]),
+  },
   methods: {
-    getSongsDetail(item) {
+    getItem(item) {
       commandAPI
         .songDetailRequest({
           ids: this.carouselList[item].targetId,
@@ -61,28 +69,26 @@ export default {
         .then((res) => {
           // console.log('res2:',res.songs[0]);
           this.songsDetail = res.songs[0];
+          // 获取轮播图歌曲Url
+          commandAPI
+            .songUrlRequest({
+              id: this.carouselList[item].targetId,
+            })
+            .then((res) => {
+              console.log(res.data[0]);
+              // this.songDetail.Url = res.data[0].url
+              if (res.data[0] != null && res.data[0] != undefined) {
+                this.$set(this.songsDetail, "Url", res.data[0].url);
+              }
+              this.addSongsToPlayinglist(this.songsDetail);
+              this.playingSongs(this.songsDetail)
+            });
         });
     },
-    getItem(item) {
-      this.getSongsDetail(item);
-      // 获取轮播图歌曲Url
-      commandAPI
-        .songUrlRequest({
-          id: this.carouselList[item].targetId,
-        })
-        .then((res) => {
-          console.log(res.data[0]);
-          // this.songDetail.Url = res.data[0].url
-          if (res.data[0] != null && res.data[0] != undefined) {
-            this.$set(this.songsDetail, "Url", res.data[0].url);
-          }
-          // console.log(this.songsDetail);
-        });
-      // console.log("this",this.songsDetail);
-      setTimeout(() => {
-        this.$EventBus.$emit("Detail", this.songsDetail);
-      }, 1000);
-    },
+    ...mapMutations({
+      addSongsToPlayinglist: "ADD_SONGS_TO_PLAYINGLIST",
+      playingSongs:'PLAYING_SONG'
+    }),
   },
 };
 </script>

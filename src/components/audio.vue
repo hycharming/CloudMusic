@@ -80,17 +80,22 @@
         status="exception"
         style="width: 30%"
       ></el-progress>
-      <i class="el-icon-s-fold" @click="OpenplayingList()" style="cursor:pointer"></i>
+      <i
+        class="el-icon-s-fold"
+        @click="OpenplayingList()"
+        style="cursor: pointer"
+      ></i>
     </div>
   </div>
 </template>
 
 <script>
 // import songsAPI from '../service/api'
+import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      isPlayingListOpen:false, //播放列表是否打开
+      isPlayingListOpen: false, //播放列表是否打开
       isFirst: true, // 是否为第一首歌（没有上一首）
       isLast: false, // 是否为最后一首歌（没有下一首）
       isPlay: false,
@@ -121,29 +126,39 @@ export default {
         this.minute += 1;
       }
     },
-  },
-  mounted() {
-    this.$EventBus.$on("playingSongs", (res) => {
-      this.timer = 0;
-      this.minute = 0;
-      clearInterval(this.interval);
-      // console.log("res", res);
-      this.songsDetail = res;
-      // // 将歌曲添加至播放列表
-      // this.$EventBus.$emit("playList", this.songsDetail);
-      if (this.songsDetail.index === 0) {
+    getplayingSong(newvar) {
+      if (this.interval !== 0) {
+        this.timer = 0;
+        this.minute = 0;
+        clearInterval(this.interval);
+      }
+      // 是否为第一首歌
+      if (
+        this.getState.findIndex((n) => n.id == this.getplayingSong.id) ==
+        this.getState.length - 1
+      ) {
+        this.isLast = true;
+      } else {
+        this.isLast = false;
+      }
+      // 是否为最后一首歌
+      if (this.getState.findIndex((n) => n.id == this.getplayingSong.id) == 0) {
         this.isFirst = true;
       } else {
         this.isFirst = false;
       }
-      // console.log(this.songsDetail.dt);
+      this.songsDetail = newvar;
+      console.log(this.songsDetail);
       this.time = parseInt(this.songsDetail.dt / 1000);
       // console.log(this.time);
       let min = parseInt(this.time / 60);
-      let sec = this.time % 60 >=10? this.time%60:'0'+this.time%60;
+      let sec = this.time % 60 >= 10 ? this.time % 60 : "0" + (this.time % 60);
       // console.log(time,min,this.songsDetail.dt,sec);
       this.songsLength = `${min}:${sec}`;
-    });
+    },
+  },
+  computed: {
+    ...mapGetters(["getState", "getplayingSong"]),
   },
   methods: {
     playSongs() {
@@ -151,7 +166,6 @@ export default {
       this.interval = setInterval(() => {
         this.timer += 1;
       }, 1000);
-
       console.log(this.isPlay);
     },
     pauseSongs() {
@@ -166,16 +180,27 @@ export default {
     },
     // 上一首
     lastSongs() {
-      this.$EventBus.$emit("playSongs", this.songsDetail.index - 1);
+      this.PlayingSong(
+        this.getState[
+          this.getState.findIndex((n) => n.id == this.getplayingSong.id) - 1
+        ]
+      );
     },
     //下一首
     nextSongs() {
-      this.$EventBus.$emit("playSongs", this.songsDetail.index + 1);
+      this.PlayingSong(
+        this.getState[
+          this.getState.findIndex((n) => n.id == this.getplayingSong.id) + 1
+        ]
+      );
     },
+    ...mapMutations({
+      PlayingSong: "PLAYING_SONG",
+    }),
     // 打开播放列表
     OpenplayingList() {
-      this.isPlayingListOpen = !this.isPlayingListOpen
-      this.$EventBus.$emit('isOpenPlayingList',this.isPlayingListOpen)
+      this.isPlayingListOpen = !this.isPlayingListOpen;
+      this.$EventBus.$emit("isOpenPlayingList", this.isPlayingListOpen);
     },
   },
   props: {},

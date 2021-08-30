@@ -8,19 +8,20 @@
       />
       <span class="titleSpan">网易云音乐</span>
       <div class="options">
-        <el-button icon="el-icon-arrow-left" circle></el-button>
-        <el-button icon="el-icon-arrow-right" circle></el-button>
+        <el-button icon="el-icon-arrow-left" circle @click="turnLeft()"></el-button>
+        <el-button icon="el-icon-arrow-right" circle @click="turnRight()"></el-button>
         <el-input
           class="search"
           prefix-icon="iconfont icon-sousuo"
           size="mini"
           placeholder="搜索"
+          v-model="searchSongs"
+          @keyup.enter.native="search()"
         ></el-input>
         <el-button
           class="tgsq"
           icon="iconfont icon-maikefeng-xue"
           circle
-          @click="test()"
         ></el-button>
       </div>
     </div>
@@ -80,6 +81,7 @@
 
 <script>
 import loginAPI from "../service/login";
+// import dataAPI from '../service/api'
 // import UserAPI from "../service/user";
 export default {
   // loginAPI.loginRequest({
@@ -88,6 +90,7 @@ export default {
   //     })
   data() {
     return {
+      searchSongs: "",
       dialogVisible: false,
       isLogin: false,
       // isLogout:false,
@@ -103,7 +106,7 @@ export default {
   },
   mounted() {
     this.$EventBus.$on("isLogout", (msg) => {
-       this.$EventBus.$emit("isLogin", false);
+      this.$EventBus.$emit("isLogin", false);
       if (msg) {
         this.userInfo = {};
       }
@@ -114,8 +117,8 @@ export default {
       if (this.dialogVisible != true && !sessionStorage.getItem("token")) {
         this.dialogVisible = true;
       } else {
-          this.isLogin = !this.isLogin;
-          this.$EventBus.$emit("isLogin", this.isLogin);
+        this.isLogin = !this.isLogin;
+        this.$EventBus.$emit("isLogin", this.isLogin);
       }
     },
     // 登录请求
@@ -137,8 +140,32 @@ export default {
       this.dialogVisible = false;
       setTimeout(() => {
         this.$EventBus.$emit("login", true);
-      },500);
+      }, 500);
     },
+    // 歌曲搜索
+    search() {
+      if (this.searchSongs == "") {
+        this.$router.push("/findMusic/command");
+      } else {
+        if (this.$route.path != "/searchResult") {
+          this.$router.push({
+            path: "/searchResult",
+            query: { result: this.searchSongs },
+          });
+        } else {
+          this.$EventBus.$emit("searchData", this.searchSongs);
+        }
+      }
+    },
+    // 返回上一级
+    turnLeft(){
+      this.$router.go(-1);
+    },
+    // 下一级
+    turnRight(){
+      this.$router.go(1);
+    }
+    
   },
 };
 </script>
@@ -179,7 +206,7 @@ $BackGroundColor: #ec4141;
       padding: 6px;
       background-color: $btnAndInputBGC;
       border: none;
-      color: $BTNfontColor;
+      color: white;
     }
     .tgsq {
       color: $fontColor;
@@ -260,7 +287,7 @@ $BackGroundColor: #ec4141;
     width: 150px;
     background-color: $btnAndInputBGC;
     border: none;
-    color: $BTNfontColor;
+    color: white;
   }
   .el-input__icon {
     color: $fontColor;

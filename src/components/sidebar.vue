@@ -25,7 +25,12 @@
       </div>
       <div class="miniTitle">创建的歌单</div>
       <div class="createdSongsList">
-        <div class="list" v-for="(item, index) in createdList" :key="index">
+        <div
+          class="list"
+          v-for="(item, index) in createdList"
+          :key="index"
+          @click="getCreatedSongsListDetail(index)"
+        >
           <i
             class="iconfont icon-changyongicon-"
             v-if="!index"
@@ -37,7 +42,12 @@
       </div>
       <div class="miniTitle" v-show="isLogin">收藏的歌单</div>
       <div class="collectedSongsList">
-        <div class="list" v-for="(item, index) in collectedList" :key="index">
+        <div
+          class="list"
+          v-for="(item, index) in collectedList"
+          :key="index"
+          @click="getCollectedSongsListDetail(index)"
+        >
           <i class="el-icon-headset"></i>
           {{ item.name }}
         </div>
@@ -47,6 +57,7 @@
 </template>
 
 <script>
+import dataAPI from "../service/api";
 import UserAPI from "../service/user";
 export default {
   data() {
@@ -89,7 +100,7 @@ export default {
   mounted() {
     this.$EventBus.$on("login", (res) => {
       this.isLogin = true;
-      console.log("res:",res);
+      console.log("res:", res);
       if (res) {
         this.UserRequest();
       }
@@ -104,10 +115,14 @@ export default {
   methods: {
     getIndex(idx) {
       this.clickIndex = idx;
-      this.$router.push({path:this.routerPath[idx],query:{time:Date.now()}});
+      this.$router.push({
+        path: this.routerPath[idx],
+        query: { time: Date.now() },
+      });
     },
+    // 用户歌单信息
     UserRequest() {
-      console.log(JSON.parse(sessionStorage.getItem('userInfo')).userId);
+      console.log(JSON.parse(sessionStorage.getItem("userInfo")).userId);
       UserAPI.GetUserSongsList({
         uid: JSON.parse(sessionStorage.getItem("userInfo")).userId,
       }).then((res) => {
@@ -120,6 +135,28 @@ export default {
             : this.createdList.push(item);
         });
       });
+    },
+    //歌单详情
+    getCreatedSongsListDetail(index) {
+      console.log(this.createdList[index].id,document.cookie);
+      dataAPI
+        .songsListDetailRequest({
+          id:this.createdList[index].id,
+          cookie:document.cookie
+        })
+        .then((res) => {
+          console.log(res);
+          // this.$router.push({ name: "songsListDetail", query: res.playlist });
+        });
+    },
+    getCollectedSongsListDetail(index) {
+      dataAPI
+        .songsListDetailRequest({
+          id: this.collectedList[index].id,
+        })
+        .then((res) => {
+          this.$router.push({ path: "/songsListDetail", query: res.playlist });
+        });
     },
   },
 };

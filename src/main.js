@@ -6,6 +6,7 @@ import './assets/global.css'
 import './assets/navbarIcons/iconfont.css'
 import './assets/sidebarIcons/iconfont.css'
 import './assets/audioIcons/iconfont.css'
+import store from './store/index'
 
 import {
   Container,
@@ -28,7 +29,8 @@ import {
   Divider,
   Tag,
   Table,
-  TableColumn
+  TableColumn,
+  Loading
 } from 'element-ui'
 
 Vue.use(Container),
@@ -51,7 +53,8 @@ Vue.use(Checkbox),
 Vue.use(Divider),
 Vue.use(Tag),
 Vue.use(Table),
-Vue.use(TableColumn)
+Vue.use(TableColumn),
+Vue.use(Loading.directive);
 
 Vue.config.productionTip = false
 
@@ -60,5 +63,6 @@ Vue.prototype.$EventBus = new Vue()
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

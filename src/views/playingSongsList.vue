@@ -5,7 +5,7 @@
         <h2>当前播放</h2>
       </div>
       <div class="options">
-        <span>{{'共'+tableData.length+'首'}}</span>
+        <span>{{ "共" + getState.length + "首" }}</span>
         <div class="btn">
           <el-button type="text" style="color: black"
             ><i class="el-icon-folder-add"></i> 收藏全部</el-button
@@ -17,18 +17,16 @@
         <el-table
           :show-header="false"
           stripe
-          style="width: 100%"
-          :data="tableData"
+          style="width: 100%; min-height: 500px"
+          :data="getState"
           :row-style="{ height: '10px' }"
           :row-class-name="tableRowClassName"
           @row-dblclick="playSongs"
         >
-          <el-table-column
-            width="25"
-            show-overflow-tooltip
-          ><template slot-scope="scope">
-            <i class="el-icon-service" v-show="scope.row.id == playingId"></i>
-          </template>
+          <el-table-column width="25" show-overflow-tooltip
+            ><template slot-scope="scope">
+              <i class="el-icon-service" v-show="scope.row.id == playingId"></i>
+            </template>
           </el-table-column>
           <el-table-column
             prop="name"
@@ -63,43 +61,29 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      loading: true,
       playingId: -1, //正在播放
-      tableData: [],
       isRepeat: false,
       isPlayingListOpen: false,
     };
   },
+  watch: {
+    getplayingSong(newval) {
+      this.playingId = newval.id;
+    },
+  },
   mounted() {
-    // 播放全部
-    this.$EventBus.$on("AllSongs", (res) => {
-      this.tableData = res;
-      this.$EventBus.$emit("playingSongs", this.tableData[0]);
-      this.playingId = this.tableData[0].id;
-    });
-    // 更新播放列表
-    this.$EventBus.$on("Detail", (res) => {
-      console.log("34",res);
-      this.isRepeat = false;
-      for (var i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].Url == res.Url) {
-          this.isRepeat = true;
-          break;
-        }
-      }
-      if (!this.isRepeat) {
-        this.tableData.push(res);
-      }
-      // 播放歌曲
-      this.$EventBus.$emit("playingSongs", res);
-      this.playingId = res.id;
-    });
     // 是否打开播放列表
     this.$EventBus.$on("isOpenPlayingList", (res) => {
       this.isPlayingListOpen = res;
     });
+  },
+  computed: {
+    ...mapGetters(["getState", "getplayingSong"]),
   },
   methods: {
     tableRowClassName({ row }) {
@@ -108,11 +92,17 @@ export default {
       }
       return "";
     },
-    playSongs(res){
-      console.log("res12",res);
-      this.$EventBus.$emit("findSongsUrl", res);
-      this.playingId = res.id;
-    }
+    playSongs(res) {
+      console.log("res12", res);
+      if (Object.prototype.hasOwnProperty.call(res,'Url')) {
+        this.PlayingSong(res);
+      } else {
+        this.$EventBus.$emit("findSongsUrl", res);
+      }
+    },
+    ...mapMutations({
+      PlayingSong: "PLAYING_SONG",
+    }),
   },
 };
 </script>
@@ -126,8 +116,8 @@ export default {
   .el-card {
     height: 100%;
     width: 400px;
-      // border: none;
-      // border-radius: 0;
+    // border: none;
+    // border-radius: 0;
     overflow: scroll;
     .title {
       h2 {

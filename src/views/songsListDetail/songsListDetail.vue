@@ -3,7 +3,7 @@
     <div class="describe">
       <div class="songsListImg">
         <el-image
-          :src="Object.keys(dataList).length !== 0 ? dataList.coverImgUrl : ''"
+          :src="dataList.coverImgUrl"
           style="float: left; width: 180px; height: 180px; border-radius: 5px"
         ></el-image>
       </div>
@@ -141,6 +141,9 @@ export default {
     //     // console.log("object",this.$refs.dataList );
     //   });
   },
+  mounted(){
+    this.dataList = this.$route.query;
+  },
 
   methods: {
     DisplayOrClose() {
@@ -190,6 +193,7 @@ export default {
 .songsListDetail {
   padding: 20px;
   .describe {
+    min-width: 800px;
     .songsListImg {
     }
     .title {
@@ -266,6 +270,7 @@ export default {
     }
   }
   .options {
+    min-width:800px ;
     margin-top: 30px;
     @include flex();
     justify-content: space-between;
